@@ -1,136 +1,92 @@
-Employee Hub — SPA
+ช่วยสร้าง WebApp SmartHR - ระบบบันทึกข้อมูลบุคลากรองค์กร 
+(ภาพรวมระบบ
+ระบบสำหรับจัดการข้อมูลพนักงานในองค์กร
+เหมาะสำหรับสอนหลักการสร้าง WebApp แบบ CRUD และการกำหนดสิทธิ์ผู้ใช้งาน (Role)
+ประเภทผู้ใช้งาน
+ ผู้ใช้งาน                        |             หน้าที่
+Admin        | จัดการผู้ใช้งานทั้งหมด
+HR           | จัดการข้อมูลพนักงาน
+Employee     | ดูข้อมูลตนเอง
+
+ฟังก์ชันหลักของระบบ
+1) Login
+ผู้ใช้เข้าสู่ระบบด้วย
+ชื่อผู้ใช้
+รหัสผ่าน (ให้มีดวงตาแสดงซ่อนรหัส)
+ติ๊กจำรหัสผ่าน
+
+2) จัดการข้อมูลพนักงาน (CRUD)
+Create - เพิ่มข้อมูลพนักงานใหม่
+Read - ดูรายการพนักงาน
+Update - แก้ไขข้อมูลพนักงาน
+Delete - ลบข้อมูลพนักงาน
+
+โครงสร้างฐานข้อมูล
+ตาราง users
+เก็บข้อมูลผู้ใช้งานระบบ รหัสผู้ใช้ ชื่อ-สกุล ชื่อผู้ใช้ รหัสผ่าน สิทธิ์ (admin / hr / employee)
+ตาราง employees
+เก็บข้อมูลพนักงาน รหัสพนักงาน ชื่อ-สกุล แผนก/ตำแหน่ง เงินเดือน เบอร์โทร วันที่บันทึก
+
+ความสัมพันธ์ของระบบ
+Admin / HR
+      ↓
+จัดการข้อมูลพนักงาน
+(Create / Read / Update / Delete)
+      ↓
+Database
+      ↓
+Employee ดูข้อมูลตนเอง) 
+
+(SPA) สวยงาม ทันสมัย ใช้งานง่ายทุกอุปกรณ์ มีแดชบอร์ภาพรวม บันทึกข้อมูลด้วย Supabase สร้าง SQL ตารางทั้งหมดที่ใช้พร้อมข้อมูลตัวอย่าง ใช้ Github ในการสร้าง WebApp และ Supabase เป็นฐานข้อมูล มีฟังก์ชั่นสร้างโครงสร้าง พร้อมมีข้อมูลตัวอย่างด้วย Error Handling - ถ้ารูปโหลดไม่ได้จะแสดงข้อความแทน และมี loader การทำงานแต่ละฟังก์ชั่น ใช้ฟอนต์ Kanit
+และลบค่าต่างๆ แทนการรีโหลดเว็บ หากมีการอัปโหลดภาพให้ใช้การอัปโหลดแทนการวางลิงค์ พร้อมทั้งบีบอัดไฟล์ภาพให้ขนาดเล็กที่สุด เพื่อประหยัดพื้นที่ โดยมีข้อกำหนดดังนี้:
+1. ส่วน Database (SQL):
+ขอโค้ด SQL เพื่อรันใน Supabase Editor ทีเดียวจบ โดยต้องมี:
+ตารางเก็บข้อมูลต่างๆของระบบ (ถ้ามีโครงสร้างของแต่ละตารางเก็บข้อมูล กำหนดเองได้เลย)
+สำคัญเรื่อง RLS: ให้เปิด Enable RLS ทุกตาราง แต่สร้าง Policy แยก 4 ตัว (Select, Insert, Update, Delete) โดยใช้เงื่อนไข USING (true) และ WITH CHECK (true) เพื่อให้ทดสอบระบบได้ทันทีโดยไม่ติด Permission
+Storage: คำสั่ง SQL ที่ใช้สร้างตาราง, สร้าง Bucket ใน Storage รวมถึงการเขียน RLS/Policies ปลดล็อกสิทธิ์ของตารางและ Storage นั้นให้ครบถ้วนในสคริปต์เดียว และเปิด Public Access พร้อม Policy ให้คนที่ Authenticated อัปโหลดไฟล์ได้
+ตัวแปร const supabase ห้ามใช้ชื่อตัวแปร supabase เด็ดขาด มันจะไปมีปัญหากับชื่อตัวแปร supabase ไปซ้ำกับชื่อ Library หลักของ Supabase
+ให้กำหนดตัวแปรในการใส่ API KEY แยกไฟล์ config.js เป็นชื่อดังนี้
+const SUPABASE_URL 
+const SUPABASE_ANON_KEY
+ 
+2. ส่วนหน้าเว็บ (Frontend):
+ใช้ไฟล์ index.html ไฟล์เดียว (รวม JS/CSS)
+ใช้ Tailwind CSS จัดหน้าจอแบบ Responsive (Mobile First)
+Chart.js, Lucide Icons
+
+
+
+📌 ข้อกำหนดด้านการออกแบบ UI/UX (บังคับใช้ธีมนี้):
+ธีมธรรมชาติ (สบายตา ใช้ได้นาน)	ออกแบบ UI โทนสีธรรมชาติ เขียว น้ำตาล ครีม ให้ความรู้สึกอบอุ่น เป็นมิตร ใช้พื้นหลัง texture เบาๆ เช่น กระดาษ หรือไม้ มี icon ธรรมชาติ เช่น ใบไม้ layout เรียบง่าย ใช้งานง่าย เหมาะกับระบบชุมชน โรงเรียน หรือสุขภาพ
+
+📌 หน้าแรก (Landing Page):
+ปรับปรุงโครงสร้างใหม่ให้มี "หน้าแรก (Landing Page)" ที่แสดงแดชบอร์ดสรุปภาพรวม (Overview Stats) อย่างสวยงาม ก่อนที่ผู้ใช้จะกดเข้าสู่หน้า Login พร้อมปรับปรุง UI ให้มีความละมุนและใช้งานง่ายขึ้น
+เพิ่มหน้า Login ในการเข้าระบบโดยแยกสิทธิ์ และแอดมินจัดการต่างๆสำหรับผู้ดูแลระบบ กำหนดชื่อผู้ใช้และรหัสผ่าน ไม่ต้องการพึ่งพาระบบ Auth หลักของ Supabase (ที่บังคับอีเมล) ทำ Custom Login ขึ้นมาเอง โดยการสร้างตารางเก็บ username และ password ของเราเอง ตรวจสอบการเข้าระบบ ผู้ใช้สามารถดู แก้ไข ลบ ได้เฉพาะข้อมูลตัวเองเท่านั้น ส่วนผู้ดูแลระบบ (Admin) ดูข้อมูลทั้งหมด แก้ไข / ลบข้อมูล ดาวน์โหลดรายงาน จัดการสิทธิ์ผู้ใช้งานดู แก้ไข ลบ ได้ทุกคน พร้อมปรับให้ระบบใช้งานได้ดีทุกอุปกรณ์ เน้นในโทรศัพท์มือถือให้ย่อ ขยาย ข้อความและส่วนต่างๆ ตามอุปกรณ์ ให้พอดีกับอุปกรณ์ไม่แสดงใหญ่มากเกินไปให้พอดี สร้าง Layout หน้าเว็บแบบ Responsive โดยใช้ HTML และ Tailwind CSS ดังนี้:
+1. Desktop View (หน้าจอคอม):
+ให้มี Sidebar Menu อยู่ด้านซ้ายแบบ Fixed สำหรับแสดงเมนูทั้งหมดเนื้อหา (Content) อยู่ด้านขวา
+2. Mobile View (หน้าจอมือถือ):
+ซ่อน Sidebar Menu และให้แสดงเป็น Bottom Navigation Bar (แถบเมนูติดขอบล่าง) แทน
+สำหรับ User ทั่วไป: ในแถบด้านล่าง ให้แสดงปุ่มเมนูหลักๆ
+สำหรับ Admin: ในแถบด้านล่าง ให้เพิ่มปุ่มพิเศษตรงกลาง (ปุ่ม Hamburger หรือปุ่ม Menu)
+ฟังก์ชันปุ่ม Admin: เมื่อกดปุ่มนี้ ให้เด้งหน้าต่าง Panel (Grid Layout) ขึ้นมาจากด้านล่าง (อยู่เหนือ Bottom Nav)
+ใน Panel นี้ให้ใส่ปุ่มเมนูจัดการหลังบ้านทั้งหมด เรียงเป็น Grid สวยงาม
+มีปุ่มกากบาท หรือกดปุ่มเดิมเพื่อปิด Panel ได้"
+สำหรับปุ่มออกจากระบบให้มี modal แจ้งเตือนถามจะออกจากระบบไหม หากออกแล้วให้ใช้วิธีการแสดง ซ่อน
+ซ่อน Sidebar ทั้งหมดเมื่ออยู่ในสถานะ Guest (ยังไม่เข้าสู่ระบบ)
+ให้ส่งโค้ดฉบับที่ปรับแก้แล้ว สมบูรณ์ มาทั้งหมด พร้อมก๊อปปี้ไปวางทับของเดิมได้เลย ทุกครั้ง
+
+ตัวอย่างธีม
+1. ธีมพาสเทลน่ารัก (เหมาะกับโรงเรียน/นักเรียน)	ออกแบบ UI Dashboard โทนสีพาสเทล (ฟ้าอ่อน ชมพูอ่อน เหลืองครีม) สไตล์น่ารัก มินิมอล สบายตา ใช้ฟอนต์ไทยอ่านง่าย เช่น Kanit หรือ Prompt มีการ์ด (Card) มุมโค้ง เงานุ่ม (Soft Shadow) มีไอคอนน่ารักๆ และภาพประกอบสไตล์ flat design ปุ่มมี hover effect และ animation เล็กน้อย จัด layout แบบ grid เป็นระเบียบ ใช้งานง่าย เหมาะสำหรับระบบโรงเรียนหรือระบบนักเรียน
+
+2. ธีม Glassmorphism (สวยล้ำ ทันสมัย)	ออกแบบ UI แบบ Glassmorphism พื้นหลังเป็น gradient สีฟ้า-ม่วง หรือ sunset tone ใช้การ์ดโปร่งใส (blur background) ขอบโค้ง + เงาแบบลอย มี effect แสงสะท้อน (glass effect) ใช้ฟอนต์ modern เช่น Inter หรือ Sarabun เหมาะกับ Dashboard ผู้บริหาร หรือระบบไอที
+
+3. ธีม Dark Mode ไฮเทค (สายเท่)	ออกแบบ UI โทน Dark Mode สีดำ-เทา ใช้สี accent เป็นฟ้า neon / เขียว / ม่วง สไตล์ futuristic / cyber tech มี animation เบาๆ เช่น glowing effect ใช้ฟอนต์แนวเทคโนโลยี เหมาะกับระบบ IT, Dashboard, Coding system
+
+4. ธีมธรรมชาติ (สบายตา ใช้ได้นาน)	ออกแบบ UI โทนสีธรรมชาติ เขียว น้ำตาล ครีม ให้ความรู้สึกอบอุ่น เป็นมิตร ใช้พื้นหลัง texture เบาๆ เช่น กระดาษ หรือไม้ มี icon ธรรมชาติ เช่น ใบไม้ layout เรียบง่าย ใช้งานง่าย เหมาะกับระบบชุมชน โรงเรียน หรือสุขภาพ
+
+5. ธีมราชการ/ทางการ (ดูน่าเชื่อถือ)	ออกแบบ UI โทนสีน้ำเงิน ขาว เทา สไตล์เรียบร้อย เป็นทางการ ใช้ฟอนต์ Sarabun หรือ TH Sarabun มี header ชัดเจน โลโก้ด้านบน layout เป็นระเบียบ ใช้งานง่าย เหมาะกับระบบโรงเรียน/หน่วยงานราชการ
+
+6. ธีม Startup (โมเดิร์น เท่ ใช้งานง่าย)	ออกแบบ UI Dashboard แบบ Startup ใช้สีหลัก เช่น ฟ้า ม่วง ส้ม มีกราฟ สถิติ และ KPI ใช้ layout แบบ modern card + sidebar มี animation เล็กน้อย สไตล์ clean + professional
+
+7. ธีม AI / Digital (ล้ำอนาคต)	ออกแบบ UI แนว AI Technology ใช้ gradient สีม่วง-น้ำเงิน-ฟ้า มีเส้น light effect / grid digital มี icon แนว AI เช่น neural network ใช้ฟอนต์ futuristic เหมาะกับระบบ AI / Data / Smart system
 
-ระบบข้อมูลพนักงานแบบ Single Page Application (SPA) ใช้:
-
-Frontend: index.html ไฟล์เดียว รวม HTML + Tailwind CSS + JavaScript
-
-Database/Auth/Storage: Supabase
-
-Charts: Chart.js
-
-Icons: Lucide
-
-Font: Kanit
-
-Hosting: GitHub Pages / GitHub repository ใดก็ได้ที่เสิร์ฟ index.html
-
-โครงสร้างระบบ
-
-employee-spa/
-├─ index.html      # Frontend ทั้งหมดในไฟล์เดียว
-├─ supabase.sql    # Schema + RLS + Storage + Policies + Sample Data
-└─ README.md
-
-Tables
-
-departments — แผนก
-
-positions — ตำแหน่ง
-
-employees — ข้อมูลพนักงานและข้อมูลรูป
-
-activity_logs — ประวัติกิจกรรมของระบบ
-
-Storage
-
-Bucket: employee-avatars
-
-Public bucket สำหรับแสดงรูปผ่าน public URL
-
-รับ JPEG / PNG / WebP
-
-จำกัด bucket 256KB ต่อไฟล์
-
-Frontend resize ด้านยาวสูงสุด 600px และแปลงเป็น WebP ก่อนอัปโหลด
-
-เป้าหมายไฟล์บีบอัดประมาณไม่เกิน 150KB
-
-Insert / Update / Delete ต้องเป็นผู้ใช้ authenticated
-
-วิธีติดตั้ง
-
-1. สร้าง Supabase Project
-
-สร้างโปรเจกต์ใหม่ใน Supabase จากนั้นเปิด SQL Editor
-
-2. รัน SQL ครั้งเดียว
-
-เปิด supabase.sql → Copy ทั้งไฟล์ → วางใน Supabase SQL Editor → Run
-
-สคริปต์จะสร้างตาราง, index, trigger, RLS, 4 policies ต่อหนึ่งตาราง, bucket, Storage policies และข้อมูลตัวอย่าง
-
-3. เปิดเว็บ
-
-เปิด index.html ใน browser หรือ push ขึ้น GitHub แล้วเปิดด้วย GitHub Pages
-
-4. เชื่อมต่อ Supabase
-
-ไปที่ ตั้งค่าระบบ ในเว็บ แล้วกรอก:
-
-Project URL
-
-Publishable / Anon Key
-
-ค่าเหล่านี้ถูกเก็บใน localStorage ของ browser เครื่องนั้น
-
-ห้ามใส่ service_role key ใน frontend
-
-5. อัปโหลดรูป
-
-กดเข้าสู่ระบบ → ใช้อีเมล/รหัสผ่านของ Supabase Auth → เพิ่มหรือแก้ไขพนักงาน → เลือกไฟล์รูปจากเครื่อง
-
-ระบบจะบีบอัดไฟล์บน browser ก่อนส่งไป Storage และเก็บเฉพาะ path + public URL ลงในตาราง employees
-
-RLS ที่ใช้ในโหมดทดสอบ
-
-ตาราง public ทุกตัวเปิด RLS และมี policy 4 ตัว:
-
-SELECT: USING (true)
-
-INSERT: WITH CHECK (true)
-
-UPDATE: USING (true) WITH CHECK (true)
-
-DELETE: USING (true)
-
-รูปใน Storage ใช้ policy แยก 4 ตัว โดย public อ่านไฟล์ได้ และ authenticated เท่านั้นที่ upload/update/delete ได้
-
-นโยบายนี้สะดวกสำหรับการทดสอบ แต่ไม่ควรนำขึ้นระบบ production ที่มีข้อมูลพนักงานจริงโดยไม่ปรับสิทธิ์ตามบทบาทผู้ใช้
-
-ฟังก์ชันหลัก
-
-Dashboard summary
-
-Employee CRUD
-
-Search / filter
-
-Department / Position relationship
-
-Recent activity log
-
-Supabase Auth sign-in/sign-up/sign-out
-
-Image upload + compression
-
-Image fallback เมื่อรูปโหลดไม่ได้
-
-Global loader ทุก operation หลัก
-
-Toast error/success
-
-ล้างฟอร์ม/ตัวกรองโดยไม่ reload หน้าเว็บ
-
-Responsive Mobile First
-
-GitHub Pages
-
-สร้าง repository ใหม่
-
-อัปโหลด index.html, supabase.sql, README.md
-
-ไปที่ Settings → Pages
-
-เลือก Deploy from a branch → main / root
-
-เปิด URL ที่ GitHub Pages ให้
